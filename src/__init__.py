@@ -1,0 +1,1 @@
+# Freepik FastMCP Package
