@@ -47,9 +47,11 @@ echo "FREEPIK_API_KEY=your_api_key_here" > .env
 
 ## ⚙️ Configuration for AI Assistants
 
-### For Claude Desktop
+### For Claude Desktop or Cursor on Linux
 
 Add this to your `config.json` file:
+
+> ⚠️ **For Windows users:** If you're on Windows, you need to use WSL (Windows Subsystem for Linux) to run this MCP server.
 
 ```json
 {
@@ -59,32 +61,7 @@ Add this to your `config.json` file:
       "args": [
         "run",
         "--directory", 
-        "/FULL/PATH/TO/freepik-toolkit/fastmcp",
-        "fastmcp",
-        "run",
-        "main.py"
-      ],
-      "env": {
-        "FREEPIK_API_KEY": "your_actual_api_key_here"
-      }
-    }
-  }
-}
-```
-
-### For Cursor
-
-Add to your `settings.json`:
-
-```json
-{
-  "mcp.servers": {
-    "freepik-fastmcp": {
-      "command": "uv",
-      "args": [
-        "run",
-        "--directory",
-        "/FULL/PATH/TO/freepik-toolkit/fastmcp", 
+        "/FULL/PATH/TO/freepik-mcp",
         "fastmcp",
         "run",
         "main.py"
