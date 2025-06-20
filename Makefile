@@ -3,9 +3,15 @@
 # Variables  
 SERVER_FILE = main.py
 
-help: ## Show available commands
+# Load .env file if it exists
+ifneq (,$(wildcard .env))
+    include .env
+    export
+endif
+
+help: ## Show this help message
 	@echo "Available commands:"
-	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {if ($$2 ~ /^🚀|^🛠️|^📦/) printf "\n\033[33m%s\033[0m\n", $$2; else printf "  \033[36m%-15s\033[0m %s\n", $$1, $$2}'
+	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' Makefile | awk 'BEGIN {FS = ":.*?## "}; {if ($$2 ~ /^🚀|^🛠️|^📦/) printf "\n\033[33m%s\033[0m\n", $$2; else printf "  \033[36m%-15s\033[0m %s\n", $$1, $$2}'
 
 _quick-start: ## 🚀 Quick Start Commands:
 
@@ -14,14 +20,17 @@ install: ## Install dependencies
 	@echo "✅ Dependencies installed successfully"
 
 run: ## Run FastMCP server
-	DANGEROUSLY_OMIT_AUTH=true FREEPIK_API_KEY=$(FREEPIK_API_KEY) uv run fastmcp run $(SERVER_FILE)
+	DANGEROUSLY_OMIT_AUTH=true FREEPIK_API_KEY=$(FREEPIK_API_KEY) uv run fastmcp run $(SERVER_FILE) 
+
+run-stream: ## Run FastMCP stream server
+	DANGEROUSLY_OMIT_AUTH=true uv run fastmcp run $(SERVER_FILE)  --transport streamable-http --port 3000	
 
 dev: ## Run in development mode with auto-reload (usage: make dev API_KEY=your_key)
-	@if [ -z "$(API_KEY)" ] && [ -z "$$FREEPIK_API_KEY" ]; then \
+	@if [ -z "$(API_KEY)" ] && [ -z "$(FREEPIK_API_KEY)" ]; then \
 		echo "❌ Error: No API key provided. Use make dev API_KEY=your_key or set FREEPIK_API_KEY env var"; \
 		exit 1; \
 	fi
-	DANGEROUSLY_OMIT_AUTH=true FREEPIK_API_KEY=$${API_KEY:-$$FREEPIK_API_KEY} uv run fastmcp dev $(SERVER_FILE)
+	DANGEROUSLY_OMIT_AUTH=true FREEPIK_API_KEY=$${API_KEY:-$(FREEPIK_API_KEY)} uv run fastmcp dev $(SERVER_FILE)
 
 version: ## Check FastMCP version
 	uv run fastmcp version

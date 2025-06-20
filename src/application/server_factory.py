@@ -26,7 +26,7 @@ class ServerFactory:
 
         This factory method handles the complete setup process:
         1. Load configuration from environment
-        2. Create HTTP client with authentication
+        2. Create HTTP client with authentication (now dynamic per request)
         3. Load OpenAPI specification with caching
         4. Configure route mappings
         5. Create and return the configured server
@@ -43,11 +43,11 @@ class ServerFactory:
         cache_config = CacheConfig()
         server_config = ServerConfig()
 
-        # Create HTTP client
+        # Create HTTP client for initial server setup (will be replaced by dynamic clients)
         http_client = HttpClientFactory.create_api_client(api_config)
 
         # --- Custom Mystic handler ---
-        mystic_service = MysticService(http_client)
+        mystic_service = MysticService() 
         transformed_tools = []
 
         async def mystic_transform_fn(**kwargs: Any) -> dict[str, Any]:
