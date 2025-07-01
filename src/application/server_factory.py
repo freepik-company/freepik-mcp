@@ -10,8 +10,8 @@ from fastmcp.server.openapi import OpenAPITool
 from fastmcp.tools import Tool
 
 from ..domain.config import ApiConfig, CacheConfig, ServerConfig
+from ..infrastructure.ai_polling_service import MysticService
 from ..infrastructure.http_client import HttpClientFactory
-from ..infrastructure.mystic_service import MysticService
 from ..infrastructure.openapi_loader import OpenApiSpecLoader
 from .route_configuration import RouteConfiguration
 

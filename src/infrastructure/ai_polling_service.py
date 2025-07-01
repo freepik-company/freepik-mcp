@@ -10,10 +10,10 @@ from .http_client import HttpClientFactory
 
 class AIPollingService:
     """Service for handling AI generation tasks with polling for completion status.
-    
+
     Supports both Mystic (image generation) and Kling (image-to-video) AI services.
     """
-    
+
     def __init__(self):
         # No longer store a client instance - we'll create fresh ones per request
         pass
@@ -44,7 +44,7 @@ class AIPollingService:
     ) -> dict[str, Any]:
         """Generate video using Kling AI with polling."""
         return await self._generate_with_polling(
-            endpoint="/v1/ai/image-to-video/kling-std",
+            endpoint="/v1/ai/image-to-video/kling",
             payload=payload,
             ctx=ctx,
             poll_interval=poll_interval,
@@ -67,7 +67,7 @@ class AIPollingService:
 
         # Create a fresh client with current configuration for this request
         client = HttpClientFactory.create_dynamic_client()
-        
+
         try:
             # 1. Make POST request to create the task
             await ctx.debug(f"Sending POST request to {endpoint} with payload: {payload}")
@@ -138,7 +138,7 @@ class AIPollingService:
 
             await ctx.warning(f"⏰ Timeout after {elapsed:.1f}s waiting for {service_name} to finish")
             raise TimeoutError(f"Timeout waiting for {service_name} to complete the task")
-            
+
         finally:
             # Always close the client to free resources
             await client.aclose()
