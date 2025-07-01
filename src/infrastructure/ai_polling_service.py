@@ -27,7 +27,8 @@ class AIPollingService:
     ) -> dict[str, Any]:
         """Generate image using Mystic AI with polling."""
         return await self._generate_with_polling(
-            endpoint="/v1/ai/mystic",
+            generative_endpoint="/v1/ai/mystic",
+            polling_endpoint="/v1/ai/mystic",
             payload=payload,
             ctx=ctx,
             poll_interval=poll_interval,
@@ -44,7 +45,8 @@ class AIPollingService:
     ) -> dict[str, Any]:
         """Generate video using Kling AI with polling."""
         return await self._generate_with_polling(
-            endpoint="/v1/ai/image-to-video/kling",
+            generative_endpoint="/v1/ai/image-to-video/kling-std",
+            polling_endpoint="/v1/ai/image-to-video/kling",
             payload=payload,
             ctx=ctx,
             poll_interval=poll_interval,
@@ -54,7 +56,8 @@ class AIPollingService:
 
     async def _generate_with_polling(
         self,
-        endpoint: str,
+        generative_endpoint: str,
+        polling_endpoint: str,
         payload: dict[str, Any],
         ctx: Context,
         poll_interval: float = 5.0,
@@ -70,11 +73,13 @@ class AIPollingService:
 
         try:
             # 1. Make POST request to create the task
-            await ctx.debug(f"Sending POST request to {endpoint} with payload: {payload}")
-            response = await client.post(endpoint, json=payload)
+            await ctx.debug(f"Sending POST request to {generative_endpoint} with payload: {payload}")
+            response = await client.post(generative_endpoint, json=payload)
             response.raise_for_status()
             data = response.json()
-            ctx.info(f"Response: {data}")
+
+            await ctx.info(f"Response: {data}")
+
             task_id = data.get("data", {}).get("task_id")
             if not task_id:
                 await ctx.error(f"❌ No task_id received from {service_name}")
@@ -83,7 +88,7 @@ class AIPollingService:
             await ctx.info(f"✅ Task created with ID: {task_id}")
 
             # 2. Poll until it's COMPLETED or fails
-            status_url = f"{endpoint}/{task_id}"
+            status_url = f"{polling_endpoint}/{task_id}"
             elapsed = 0.0
             poll_count = 0
 
