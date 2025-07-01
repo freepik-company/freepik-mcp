@@ -46,18 +46,24 @@ class ServerFactory:
         # Create HTTP client for initial server setup (will be replaced by dynamic clients)
         http_client = HttpClientFactory.create_api_client(api_config)
 
-        # --- Custom Mystic handler ---
-        mystic_service = MysticService() 
+        # --- Custom AI services handler ---
+        ai_service = MysticService()
         transformed_tools = []
 
         async def mystic_transform_fn(**kwargs: Any) -> dict[str, Any]:
             # Get the active context using the dependency function
             ctx = get_context()
             # kwargs are the POST arguments
-            return await mystic_service.generate_image_with_polling(kwargs, ctx, timeout=300.0)
+            return await ai_service.generate_image_with_polling(kwargs, ctx, timeout=300.0)
+
+        async def kling_transform_fn(**kwargs: Any) -> dict[str, Any]:
+            # Get the active context using the dependency function
+            ctx = get_context()
+            # kwargs are the POST arguments
+            return await ai_service.generate_video_with_polling(kwargs, ctx, timeout=600.0)
 
         def mcp_component_fn(route: Any, component: Any) -> Any:
-            # Only for the Mystic POST mystic tool
+            # Handle Mystic POST tool
             if (
                 route.path == "/v1/ai/mystic"
                 and route.method == "POST"
@@ -68,6 +74,22 @@ class ServerFactory:
                     component,
                     name="text_to_image_mystic_sync",
                     transform_fn=mystic_transform_fn,
+                )
+                component.disable()
+                transformed_tools.append(transformed)
+                return transformed
+
+            # Handle Kling POST tool
+            elif (
+                route.path == "/v1/ai/image-to-video/kling-std"
+                and route.method == "POST"
+                and isinstance(component, OpenAPITool)
+            ):
+                # Create a transformed tool
+                transformed = Tool.from_tool(
+                    component,
+                    name="image_to_video_kling_sync",
+                    transform_fn=kling_transform_fn,
                 )
                 component.disable()
                 transformed_tools.append(transformed)
@@ -89,7 +111,7 @@ class ServerFactory:
             mcp_component_fn=mcp_component_fn,
         )
 
-        # Explicitly add the transformed tool
+        # Explicitly add the transformed tools
         for tool in transformed_tools:
             server.add_tool(tool)
 

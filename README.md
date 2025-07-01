@@ -12,6 +12,7 @@ A **Model Context Protocol (MCP) server** that connects your AI assistants (Clau
 - 📁 **Resource Management** - Access and manage multimedia content  
 - 🤖 **AI Image Classification** - Automatically classify and analyze images
 - 🖼️ **Image Generation** - Create custom images using Mystic AI
+- 🎬 **Image-to-Video Generation** - Convert images to videos using Kling AI
 
 ## 📋 Prerequisites
 
@@ -26,7 +27,6 @@ Before you start, make sure you have:
 ### 1. Clone and navigate
 ```bash
 git clone <REPOSITORY_URL>
-cd freepik-toolkit/fastmcp
 ```
 
 ### 2. Install using Makefile
