@@ -18,6 +18,7 @@ class RouteConfiguration:
         - Resources API: Full access to resource management
         - AI Classifier: Image classification capabilities
         - Mystic AI: Advanced AI features (when available)
+        - Kling AI: Image-to-video generation capabilities
         - All other routes are excluded for security and simplicity
 
         Returns:
@@ -56,6 +57,14 @@ class RouteConfiguration:
                     "POST",
                 ],
                 pattern=r"/v1/ai/mystic.*",
+                mcp_type=MCPType.TOOL,
+            ),
+            # Kling AI - Image-to-video generation
+            RouteMap(
+                methods=[
+                    "POST",
+                ],
+                pattern=r"/v1/ai/image-to-video/kling-std.*",
                 mcp_type=MCPType.TOOL,
             ),
             # Exclude all other routes for security and simplicity
