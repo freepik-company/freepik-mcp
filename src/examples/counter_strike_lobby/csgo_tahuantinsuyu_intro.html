@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Counter Strike: Tahuantinsuyu - Warriors Intro</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Orbitron', monospace;
+            background: #000;
+            color: #fff;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        .intro-container {
+            position: relative;
+            height: 100vh;
+            background: linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #2d2d2d 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .intro-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(255, 107, 53, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(255, 215, 0, 0.1) 0%, transparent 50%);
+            z-index: 1;
+        }
+
+        .game-title {
+            position: absolute;
+            top: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 3rem;
+            font-weight: 900;
+            background: linear-gradient(45deg, #ff6b35, #ffd700, #ff6b35);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 30px rgba(255, 107, 53, 0.5);
+            letter-spacing: 3px;
+            z-index: 10;
+            animation: titlePulse 3s ease-in-out infinite;
+        }
+
+        .game-subtitle {
+            position: absolute;
+            top: 120px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #ffd700;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.7);
+            letter-spacing: 2px;
+            z-index: 10;
+            animation: subtitleGlow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes titlePulse {
+            0%, 100% { transform: translateX(-50%) scale(1); }
+            50% { transform: translateX(-50%) scale(1.05); }
+        }
+
+        @keyframes subtitleGlow {
+            0% { text-shadow: 0 0 20px rgba(255, 215, 0, 0.7); }
+            100% { text-shadow: 0 0 30px rgba(255, 215, 0, 1); }
+        }
+
+        .warriors-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 3rem;
+            max-width: 1800px;
+            width: 100%;
+            padding: 0 2rem;
+            z-index: 5;
+            position: relative;
+        }
+
+        .warrior-card {
+            background: linear-gradient(135deg, rgba(0,0,0,0.8) 0%, rgba(20,20,20,0.9) 100%);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 3px solid transparent;
+            transition: all 0.5s ease;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+        .warrior-card::before {
+            content: '';
+            position: absolute;
+            top: -3px;
+            left: -3px;
+            right: -3px;
+            bottom: -3px;
+            background: linear-gradient(45deg, #ff6b35, #ffd700, #ff6b35, #ffd700);
+            border-radius: 23px;
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            animation: borderRotate 4s linear infinite;
+        }
+
+        .warrior-card:hover::before {
+            opacity: 1;
+        }
+
+        .warrior-card:hover {
+            transform: translateY(-10px) scale(1.05);
+            box-shadow: 0 20px 40px rgba(255, 107, 53, 0.4);
+        }
+
+        @keyframes borderRotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .warrior-name {
+            font-size: 1.8rem;
+            font-weight: 900;
+            text-align: center;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.7);
+            letter-spacing: 1px;
+        }
+
+        .atahualpa .warrior-name { color: #ffd700; }
+        .mama-ocllo .warrior-name { color: #87ceeb; }
+        .huascar .warrior-name { color: #32cd32; }
+
+        .warrior-title {
+            font-size: 1rem;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: #cccccc;
+            font-style: italic;
+        }
+
+        .warrior-video {
+            width: 100%;
+            height: 500px;
+            object-fit: cover;
+            border-radius: 15px;
+            margin-bottom: 1.5rem;
+            transition: transform 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .warrior-card:hover .warrior-video {
+            transform: scale(1.05);
+        }
+
+        .warrior-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .stat {
+            background: rgba(255, 107, 53, 0.1);
+            padding: 0.5rem;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid rgba(255, 107, 53, 0.3);
+        }
+
+        .ready-status {
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #00ff00;
+            text-shadow: 0 0 15px rgba(0, 255, 0, 0.8);
+            animation: readyPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes readyPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        .match-info {
+            position: absolute;
+            bottom: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            z-index: 10;
+        }
+
+        .match-status {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #ffff00;
+            text-shadow: 0 0 20px rgba(255, 255, 0, 0.8);
+            margin-bottom: 1rem;
+            animation: matchPulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes matchPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .countdown {
+            font-size: 3rem;
+            font-weight: 900;
+            color: #ff6b35;
+            text-shadow: 0 0 30px rgba(255, 107, 53, 1);
+            margin-bottom: 1rem;
+        }
+
+        .map-info {
+            font-size: 1.2rem;
+            color: #cccccc;
+            margin-bottom: 0.5rem;
+        }
+
+        .mode-info {
+            font-size: 1rem;
+            color: #ffd700;
+            font-style: italic;
+        }
+
+        .loading-bars {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 5px;
+            z-index: 10;
+        }
+
+        .bar {
+            width: 8px;
+            height: 20px;
+            background: linear-gradient(to top, #ff6b35, #ffd700);
+            border-radius: 4px;
+            animation: loadingWave 1.5s ease-in-out infinite;
+        }
+
+        .bar:nth-child(1) { animation-delay: 0s; }
+        .bar:nth-child(2) { animation-delay: 0.2s; }
+        .bar:nth-child(3) { animation-delay: 0.4s; }
+        .bar:nth-child(4) { animation-delay: 0.6s; }
+        .bar:nth-child(5) { animation-delay: 0.8s; }
+
+        @keyframes loadingWave {
+            0%, 100% { transform: scaleY(1); }
+            50% { transform: scaleY(2); }
+        }
+
+        .particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: #ffd700;
+            border-radius: 50%;
+            opacity: 0.7;
+            animation: float 6s linear infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+        }
+
+        @media (max-width: 768px) {
+            .warriors-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            .game-title { font-size: 2rem; }
+            .game-subtitle { font-size: 1.2rem; }
+            .warrior-video { height: 250px; }
+            .countdown { font-size: 2rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="intro-container">
+        <div class="intro-overlay"></div>
+        <div class="particles" id="particles"></div>
+        
+        <h1 class="game-title">INCA STRIKE</h1>
+        <p class="game-subtitle">TAHUANTINSUYU</p>
+        
+        <div class="warriors-grid">
+            <!-- ATAHUALPA -->
+            <div class="warrior-card atahualpa">
+                <h2 class="warrior-name">ATAHUALPA</h2>
+                <p class="warrior-title">El Emperador Dorado</p>
+                
+                <video class="warrior-video" loop muted autoplay>
+                    <source src="emperador_dorado_video.mp4" type="video/mp4">
+                </video>
+                
+                <div class="warrior-stats">
+                    <div class="stat">👑 Liderazgo: 100</div>
+                    <div class="stat">⚔️ Ataque: 95</div>
+                    <div class="stat">🛡️ Defensa: 90</div>
+                    <div class="stat">⚡ Velocidad: 85</div>
+                </div>
+                
+                <div class="ready-status">✓ READY</div>
+            </div>
+
+            <!-- MAMA OCLLO -->
+            <div class="warrior-card mama-ocllo">
+                <h2 class="warrior-name">MAMA OCLLO</h2>
+                <p class="warrior-title">La Reina Guerrera</p>
+                
+                <video class="warrior-video" loop muted autoplay>
+                    <source src="reina_guerrera_video.mp4" type="video/mp4">
+                </video>
+                
+                <div class="warrior-stats">
+                    <div class="stat">⚔️ Combate: 98</div>
+                    <div class="stat">🎯 Precisión: 92</div>
+                    <div class="stat">🛡️ Defensa: 88</div>
+                    <div class="stat">⚡ Velocidad: 96</div>
+                </div>
+                
+                <div class="ready-status">✓ READY</div>
+            </div>
+
+            <!-- HUASCAR -->
+            <div class="warrior-card huascar">
+                <h2 class="warrior-name">HUASCAR</h2>
+                <p class="warrior-title">El Guardián Místico</p>
+                
+                <video class="warrior-video" loop muted autoplay>
+                    <source src="guardian_mistico_video.mp4" type="video/mp4">
+                </video>
+                
+                <div class="warrior-stats">
+                    <div class="stat">🔮 Magia: 100</div>
+                    <div class="stat">🧙 Sabiduría: 95</div>
+                    <div class="stat">🛡️ Defensa: 92</div>
+                    <div class="stat">⚡ Velocidad: 88</div>
+                </div>
+                
+                <div class="ready-status">✓ READY</div>
+            </div>
+        </div>
+        
+        <div class="match-info">
+            <div class="match-status">MATCH STARTING IN</div>
+            <div class="countdown" id="countdown">05</div>
+            <div class="map-info">Map: de_ancient_ruins</div>
+            <div class="mode-info">Mode: Conquest of Tahuantinsuyu</div>
+        </div>
+        
+        <div class="loading-bars">
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+        </div>
+    </div>
+
+    <script>
+        // Countdown timer
+        let count = 5;
+        const countdownElement = document.getElementById('countdown');
+        
+        function updateCountdown() {
+            countdownElement.textContent = count.toString().padStart(2, '0');
+            
+            if (count > 0) {
+                count--;
+                setTimeout(updateCountdown, 1000);
+            } else {
+                startMatch();
+            }
+        }
+        
+        function startMatch() {
+            countdownElement.textContent = 'GO!';
+            countdownElement.style.color = '#00ff00';
+            
+            setTimeout(() => {
+                document.querySelector('.match-status').textContent = 'MATCH STARTED!';
+                document.querySelector('.map-info').textContent = 'Fight for the Ancient Empire!';
+                document.querySelector('.mode-info').textContent = 'May the gods favor the brave!';
+            }, 1000);
+        }
+        
+        // Start countdown after page load
+        setTimeout(updateCountdown, 2000);
+        
+        // Create floating particles
+        function createParticle() {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDelay = Math.random() * 2 + 's';
+            particle.style.animationDuration = (Math.random() * 3 + 3) + 's';
+            
+            document.getElementById('particles').appendChild(particle);
+            
+            // Remove particle after animation
+            setTimeout(() => {
+                particle.remove();
+            }, 6000);
+        }
+        
+        // Generate particles periodically
+        setInterval(createParticle, 500);
+        
+        // Enhanced video interactions
+        document.querySelectorAll('.warrior-card').forEach(card => {
+            const video = card.querySelector('.warrior-video');
+            
+            card.addEventListener('mouseenter', () => {
+                video.playbackRate = 1.2;
+                card.style.zIndex = '10';
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                video.playbackRate = 1;
+                card.style.zIndex = '5';
+            });
+        });
+        
+        // Add dynamic sound effects (visual feedback)
+        document.addEventListener('click', () => {
+            const flash = document.createElement('div');
+            flash.style.position = 'fixed';
+            flash.style.top = '0';
+            flash.style.left = '0';
+            flash.style.width = '100%';
+            flash.style.height = '100%';
+            flash.style.background = 'rgba(255, 107, 53, 0.1)';
+            flash.style.pointerEvents = 'none';
+            flash.style.zIndex = '1000';
+            flash.style.animation = 'flash 0.3s ease-out';
+            
+            document.body.appendChild(flash);
+            
+            setTimeout(() => flash.remove(), 300);
+        });
+        
+        // Add flash animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes flash {
+                0% { opacity: 1; }
+                100% { opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
