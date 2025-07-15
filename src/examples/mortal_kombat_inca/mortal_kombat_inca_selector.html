@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MORTAL KOMBAT INCA - Selección de Personajes</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Cinzel', serif;
+            background: linear-gradient(135deg, #000000 0%, #1a0000 50%, #330000 100%);
+            color: #fff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .game-container {
+            position: relative;
+            min-height: 100vh;
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(255, 0, 0, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(255, 215, 0, 0.1) 0%, transparent 50%);
+        }
+
+        .game-header {
+            text-align: center;
+            padding: 2rem 0;
+            background: linear-gradient(180deg, rgba(0,0,0,0.8) 0%, transparent 100%);
+        }
+
+        .game-title {
+            font-size: 4rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, #ff0000, #ffff00, #ff4500);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 30px rgba(255, 0, 0, 0.5);
+            margin-bottom: 0.5rem;
+            letter-spacing: 3px;
+        }
+
+        .game-subtitle {
+            font-size: 1.5rem;
+            color: #ffff00;
+            font-weight: 600;
+            text-shadow: 0 0 20px rgba(255, 255, 0, 0.5);
+            letter-spacing: 2px;
+        }
+
+        .select-text {
+            text-align: center;
+            font-size: 2rem;
+            color: #fff;
+            margin: 2rem 0;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.7);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .fighters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            max-width: 1800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .fighter-card {
+            background: linear-gradient(135deg, rgba(0,0,0,0.8) 0%, rgba(20,20,20,0.9) 100%);
+            border-radius: 20px;
+            padding: 1.5rem;
+            border: 3px solid transparent;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .fighter-card::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #ff0000, #ffff00, #ff4500, #ff0000);
+            border-radius: 22px;
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .fighter-card:hover::before {
+            opacity: 1;
+        }
+
+        .fighter-card:hover {
+            transform: translateY(-10px) scale(1.05);
+            box-shadow: 0 20px 40px rgba(255, 0, 0, 0.5);
+        }
+
+        .fighter-card.selected {
+            border-color: #ffff00;
+            box-shadow: 0 0 30px rgba(255, 255, 0, 0.8);
+        }
+
+        .fighter-card.selected::before {
+            opacity: 1;
+        }
+
+
+
+        .fighter-name {
+            font-size: 1.8rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.7);
+        }
+
+        .fire-fighter .fighter-name { color: #ff4500; }
+        .moon-fighter .fighter-name { color: #87ceeb; }
+        .nature-fighter .fighter-name { color: #32cd32; }
+
+        .fighter-subtitle {
+            font-size: 1rem;
+            text-align: center;
+            margin-bottom: 1rem;
+            opacity: 0.9;
+            font-style: italic;
+        }
+
+        .fighter-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .stat {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.5rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .fighter-video {
+            width: 100%;
+            height: 500px;
+            object-fit: cover;
+            border-radius: 15px;
+            margin-bottom: 1rem;
+            transition: transform 0.3s ease;
+        }
+
+        .fighter-card:hover .fighter-video {
+            transform: scale(1.1);
+        }
+
+        .select-button {
+            background: linear-gradient(45deg, #ff0000, #ff4500);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1.2rem;
+            font-weight: 700;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+            width: 100%;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-family: 'Cinzel', serif;
+        }
+
+        .select-button:hover {
+            background: linear-gradient(45deg, #ff4500, #ffff00);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(255, 0, 0, 0.5);
+        }
+
+        .victory-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .victory-content {
+            text-align: center;
+            max-width: 80%;
+        }
+
+        .victory-title {
+            font-size: 3rem;
+            color: #ffff00;
+            margin-bottom: 2rem;
+            text-shadow: 0 0 30px rgba(255, 255, 0, 0.8);
+            animation: pulse 1.5s infinite;
+        }
+
+        .victory-video {
+            max-width: 100%;
+            height: auto;
+            border-radius: 20px;
+            box-shadow: 0 0 50px rgba(255, 255, 0, 0.6);
+        }
+
+        .close-button {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 2rem;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .close-button:hover {
+            color: #ffff00;
+        }
+
+        @media (max-width: 768px) {
+            .game-title { font-size: 2.5rem; }
+            .game-subtitle { font-size: 1.2rem; }
+            .select-text { font-size: 1.5rem; }
+            .fighters-grid { grid-template-columns: 1fr; }
+            .fighter-name { font-size: 1.5rem; }
+            .victory-title { font-size: 2rem; }
+        }
+
+        .combat-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 30% 40%, rgba(255, 0, 0, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 70% 60%, rgba(255, 215, 0, 0.1) 0%, transparent 50%);
+            z-index: -1;
+            animation: backgroundPulse 4s ease-in-out infinite;
+        }
+
+        @keyframes backgroundPulse {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.6; }
+        }
+    </style>
+</head>
+<body>
+    <div class="combat-bg"></div>
+    
+    <div class="game-container">
+        <header class="game-header">
+            <h1 class="game-title">MORTAL KOMBAT</h1>
+            <p class="game-subtitle">INCA WARRIORS</p>
+        </header>
+
+        <div class="select-text">CHOOSE YOUR FIGHTER</div>
+
+        <div class="fighters-grid">
+            <!-- INTI KILLA -->
+            <div class="fighter-card fire-fighter" data-fighter="inti">
+                <video class="fighter-video" loop muted>
+                    <source src="inti_killa_video.mp4" type="video/mp4">
+                </video>
+                
+                <h3 class="fighter-name">INTI KILLA</h3>
+                <p class="fighter-subtitle">El Señor Solar</p>
+                
+                <div class="fighter-stats">
+                    <div class="stat">⚔️ Ataque: 95</div>
+                    <div class="stat">🛡️ Defensa: 85</div>
+                    <div class="stat">⚡ Velocidad: 80</div>
+                    <div class="stat">🔥 Poder: 98</div>
+                </div>
+                
+                <button class="select-button" onclick="selectFighter('inti')">
+                    SELECT FIGHTER
+                </button>
+            </div>
+
+            <!-- MAMA KILLA -->
+            <div class="fighter-card moon-fighter" data-fighter="mama">
+                <video class="fighter-video" loop muted>
+                    <source src="mama_killa_video.mp4" type="video/mp4">
+                </video>
+                
+                <h3 class="fighter-name">MAMA KILLA</h3>
+                <p class="fighter-subtitle">La Guerrera Lunar</p>
+                
+                <div class="fighter-stats">
+                    <div class="stat">⚔️ Ataque: 88</div>
+                    <div class="stat">🛡️ Defensa: 92</div>
+                    <div class="stat">⚡ Velocidad: 96</div>
+                    <div class="stat">🌙 Poder: 90</div>
+                </div>
+                
+                <button class="select-button" onclick="selectFighter('mama')">
+                    SELECT FIGHTER
+                </button>
+            </div>
+
+            <!-- AMARU RUNA -->
+            <div class="fighter-card nature-fighter" data-fighter="amaru">
+                <video class="fighter-video" loop muted>
+                    <source src="amaru_runa_video.mp4" type="video/mp4">
+                </video>
+                
+                <h3 class="fighter-name">AMARU RUNA</h3>
+                <p class="fighter-subtitle">El Dragón Ancestral</p>
+                
+                <div class="fighter-stats">
+                    <div class="stat">⚔️ Ataque: 92</div>
+                    <div class="stat">🛡️ Defensa: 88</div>
+                    <div class="stat">⚡ Velocidad: 85</div>
+                    <div class="stat">🐍 Poder: 95</div>
+                </div>
+                
+                <button class="select-button" onclick="selectFighter('amaru')">
+                    SELECT FIGHTER
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Victory Overlay -->
+    <div class="victory-overlay" id="victoryOverlay">
+        <button class="close-button" onclick="closeVictory()">×</button>
+        <div class="victory-content">
+            <h2 class="victory-title" id="victoryTitle">FIGHTER SELECTED!</h2>
+            <video class="victory-video" id="victoryVideo" controls autoplay loop>
+                <source src="" type="video/mp4">
+            </video>
+        </div>
+    </div>
+
+    <script>
+        const fighters = {
+            inti: {
+                name: "INTI KILLA",
+                subtitle: "El Señor Solar",
+                video: "inti_killa_video.mp4",
+                color: "#ff4500"
+            },
+            mama: {
+                name: "MAMA KILLA",
+                subtitle: "La Guerrera Lunar",
+                video: "mama_killa_video.mp4",
+                color: "#87ceeb"
+            },
+            amaru: {
+                name: "AMARU RUNA",
+                subtitle: "El Dragón Ancestral",
+                video: "amaru_runa_video.mp4",
+                color: "#32cd32"
+            }
+        };
+
+        // Auto-play videos on hover
+        document.querySelectorAll('.fighter-card').forEach(card => {
+            const video = card.querySelector('.fighter-video');
+            
+            card.addEventListener('mouseenter', () => {
+                video.play();
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                video.pause();
+                video.currentTime = 0;
+            });
+        });
+
+        function selectFighter(fighterKey) {
+            const fighter = fighters[fighterKey];
+            const overlay = document.getElementById('victoryOverlay');
+            const title = document.getElementById('victoryTitle');
+            const video = document.getElementById('victoryVideo');
+            
+            // Update content
+            title.textContent = `${fighter.name} SELECTED!`;
+            title.style.color = fighter.color;
+            video.querySelector('source').src = fighter.video;
+            video.load();
+            
+            // Show overlay
+            overlay.style.display = 'flex';
+            
+            // Mark as selected
+            document.querySelectorAll('.fighter-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            document.querySelector(`[data-fighter="${fighterKey}"]`).classList.add('selected');
+            
+            // Play victory sound effect (if available)
+            playVictorySound();
+        }
+
+        function closeVictory() {
+            document.getElementById('victoryOverlay').style.display = 'none';
+        }
+
+        function playVictorySound() {
+            // Placeholder for victory sound effect
+            console.log('VICTORY SOUND!');
+        }
+
+        // Close overlay on ESC key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeVictory();
+            }
+        });
+
+        // Close overlay on background click
+        document.getElementById('victoryOverlay').addEventListener('click', (e) => {
+            if (e.target === e.currentTarget) {
+                closeVictory();
+            }
+        });
+    </script>
+</body>
+</html>
