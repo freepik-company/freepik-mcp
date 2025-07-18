@@ -6,6 +6,10 @@
 
 A **Model Context Protocol (MCP) server** that connects your AI assistants (Claude, Cursor, etc.) directly with Freepik's powerful APIs. Generate, search, and manage visual content without leaving your AI workflow.
 
+<a href="https://glama.ai/mcp/servers/@freepik-company/freepik-mcp">
+  <img width="380" height="200" src="https://glama.ai/mcp/servers/@freepik-company/freepik-mcp/badge" alt="Freepik FastToolkit MCP server" />
+</a>
+
 ## 🛠️ What tools are available?
 
 - 🎨 **Icon Search & Download** - Find and download icons in multiple formats
